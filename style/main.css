@@ -217,9 +217,9 @@ a:hover{
 }
 
 #form-r button{
-	margin-top: 5px;
-	margin-left: 30px;
-	width: 100px;
+	margin-top: 15px;
+	margin-left: 45px;
+	width: 200px;
 	height: 35px;
 }
 
@@ -239,4 +239,52 @@ a:hover{
 	font-size: 30px;
 	text-align: center;
 	padding-bottom: 5px;
+}
+
+
+/*>> login style  <<*/
+
+#h2-login{
+	position: absolute;
+	left: 600px;
+	font-size: 40px;
+	margin-bottom: 10px;
+}
+
+#h2-login p{
+	color: yellow;
+}
+
+#field-form-login{
+	width: 450px;
+	height: 350px;
+	position: absolute;
+	left: 600px;
+	top: 250px;
+	font-size: 30px;
+	background: -webkit-linear-gradient(top, #1e5799 15%,#207cca 39%,#207cca 39%,#2989d8 55%,#7db9e8 84%); /* Chrome10-25,Safari5.1-6 */
+	background: linear-gradient(to bottom, #1e5799 15%,#207cca 39%,#207cca 39%,#2989d8 55%,#7db9e8 84%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+	border: solid 1px lightblue;
+	opacity: 0.8;
+	border-radius: 20%;
+}
+
+#form-l input{
+	height: 28px;
+	width: 250px;
+	padding-left: 5px;
+	margin-left: 40px;
+	padding-right: 5px;
+}
+
+#form-l{
+	padding-left: 40px;
+	padding-top: 50px;
+}
+
+#form-l button{
+	margin-top: 15px;
+	margin-left: 45px;
+	width: 200px;
+	height: 35px;
 }

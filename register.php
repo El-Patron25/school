@@ -1,26 +1,59 @@
 <?php
-	
+	ini_set('display_errors', 1);
+error_reporting(E_ALL);
 	require "includes/autoloader.inc.php";
+	// require 'classes/dbconnection.class.php';
+	
 
-	$voornaam = isset($_GET['voornaam']);
-	$achternaam = isset($_GET['achternaam']);
-	$tussenvoegsel = isset($_GET['tvl']);
-	$username = isset($_GET['uan']);
-	$mail = isset($_GET['mail']);
-	$pass = isset($_GET['pass']);
-	$passr = isset($_GET['passr']);
+// todo: fixme 
+if(isset($_GET['sub'])){
+	$fieldnames = ['voornaam', 'achternaam', 'uan', 'mail', 'pass', 'passr'];
 
-	$connect = new dbconnection("localhost", "project1", "root", "", "utf8");
-// 	if(!empty($voornaam) || !empty($tussenvoegsel) || !empty($achternaam) || !empty($username) || !empty($mail) || !empty($pass) || !empty($passr)){
-// 	$connect->signIn($voornaam, $achternaam, $tussenvoegsel, $username, $mail, $pass, $passr);
-// }
+$error = false;
+
+foreach($fieldnames as $fieldname){
+	if(!isset($_GET[$fieldname]) || empty($_GET[$fieldname])){
+$error = true;
+echo "Error occurred: $error";
+
+	}
+
+if(!$error){
+	 
+	$voornaam = $_GET['voornaam'];
+	$achternaam = $_GET['achternaam'];
+	$tussenvoegsel = $_GET['tvl'];
+	$user = $_GET['uan'];
+	$mail = $_GET['mail'];
+	$pass = $_GET['pass'];
+	$passr = $_GET['passr'];
+	$pattern = "/^[a-zA-Z0-9]*$/";
+// todo: check if pass == passr
+	if(!filter_var($mail, FILTER_VALIDATE_EMAIL) && !preg_match($pattern, $user)){
+					echo "an error ocurred: something went wrong!";
+			}elseif(!filter_var($mail, FILTER_VALIDATE_EMAIL)){
+				echo "an error ocurred: Email Check";
+			}elseif(!preg_match($pattern, $user)){
+				echo "an error ocurred: wrong user";
+			}elseif($pass !== $passr){
+		echo "wrong password combination";
+			}
+}
+}
+$connect = new dbconnection("localhost", "project1", "root", "", "utf8");
+$connect->signUp($voornaam, $tussenvoegsel, $achternaam, $mail, $user, $pass);
+
+
+
+}
+
 ?>
 
 
 <!DOCTYPE html>
 <html>
 <head>
-	<title>dghdf</title>
+	<title>Register</title>
 
 	<link rel="stylesheet" type="text/css" href="style/main.css">
 </head>
@@ -78,12 +111,12 @@
 		<input type="password" name="passr"><br>
 		</div>
 
-		<!-- <div class="container">
-		<input hidden="" type="account_id" name="account_id"><br>
-		</div> -->
+		<div class="container">
+		<a href="login.php"><small>already account ? login!</small></a>
+		</div>
 
 		<div class="container">
-			<button class="" type="submit" name="sub">Submit</button>
+			<button class="" type="submit" href="index.php" name="sub">Submit</button>
 		</div>
 	</form>
 	</fieldset>
@@ -101,46 +134,3 @@
 </body>
 </html>
 
-<?php
-	if(isset($_GET['sub'])) {
-if(!empty($voornaam) || !empty($tussenvoegsel) || !empty($achternaam) || !empty($username) || !empty($mail) || !empty($pass) || !empty($passr)){
-
-
-
-if(!preg_match($pattern, $username) && !filter_var($email, FILTER_VALIDATE_EMAIL)){
-			// $errormsg .= $this->textValue("error", "Syntax error");
-			echo("behh");
-		}elseif(!filter_var($mail, FILTER_VALIDATE_EMAIL)){
-			$errormsg .= $this->textValue("error", "please fill in valid email\n");
-		}elseif($pass !== $passr){
-			$errormsg .= $this->textValue("error", "password is not the same!\n");
-		}else{
-			$sql = "SELECT * FROM account WHERE username = :username";
-
-			$stmt = $this->conn->prepare($sql);
-			$stmt->execute(array(":username" => $username));
-			$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-			if(!count($result) < 0) {
-				$errormsg .= $this->textValue("error", "Username already exists\n");
-			}else{
-				$sql = "INSERT INTO account (username, email, password) VALUES (:username, :email, :password)
-						INSERT INTO persoon (voornaam, tussenvoegsel, achternaam) VALUES (:voornaam, :tussenvoegsel, :achternaam)";
-				$stmt = $this->conn->prepare($sql);
-				$hashedPass = password_hash($pass, PASSWORD_DEFAULT);
-				$stmt->execute(array(
-										":voornaam" => $voornaam,
-										":tussenvoegsel" => $tussenvoegsel,
-										":achternaam" => $achternaam,
-										":username" => $username,
-										":email" => $email,
-										":password" => $hashedPass
-									));
-			}
-		}
-
-	}else{
-		echo "mehhhh";
-	}
-}
-
-	?>
