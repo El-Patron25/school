@@ -78,7 +78,7 @@ $connect->signUp($voornaam, $tussenvoegsel, $achternaam, $mail, $user, $pass);
 	<fieldset id="field-form">
 	<form action="register.php" method="GET" id="form-r">
 		<div class="container">
-		<label><b>Voornaam:</b></label><br>	
+		<label><b>Voornaam:</b></label><small>*required</small><br>	
 		<input type="text" name="voornaam"><br>
 		</div>
 
@@ -88,26 +88,26 @@ $connect->signUp($voornaam, $tussenvoegsel, $achternaam, $mail, $user, $pass);
 		</div>
 
 		<div class="container">
-			<label><b>Achternaam:</b></label><br>
+			<label><b>Achternaam:</b></label><small>*required</small><br>
 		<input type="text" name="achternaam"><br>
 		</div>
 
 		<div class="container">
-			<label><b>Username:</b></label><br>
+			<label><b>Username:</b></label><small>*required</small><br>
 		<input type="text" name="uan"><br>
 		</div>
 		<div class="container">
-			<label><b>Email:</b></label><br>
+			<label><b>Email:</b></label><small>*required</small><br>
 		<input type="email" name="mail"><br>
 		</div>
 
 		<div class="container">
-			<label><b>Password:</b></label><br>
+			<label><b>Password:</b></label><small>*required</small><br>
 		<input type="password" name="pass"><br>
 		</div>
 
 		<div class="container">
-			<label><b>Repeat Password:</b></label><br>
+			<label><b>Repeat Password:</b></label><small>*required</small><br>
 		<input type="password" name="passr"><br>
 		</div>
 

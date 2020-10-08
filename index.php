@@ -8,8 +8,8 @@
 <body>
 <div class="hero">
 	<div class="navbar">
-		<img src="img/logo.png" class="logo">
-		<button type="button"><a href="register.php">Sign Up</a></button>
+		<a href="https://www.mckinsey.com/"><img src="img/logo.png" class="logo"></a>
+		<button type="button"><a href="usertype.php">Sign Up</a></button>
 	</div>
 	<div class="content">
 		<small style="font-size: 55px; color: black;">Welcome to our</small>

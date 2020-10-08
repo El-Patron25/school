@@ -65,13 +65,13 @@ error_reporting(E_ALL);
 }
 }
 // 				Creates an account if user or mail not exists already
-	private function create_account($user, $email, $pass){
+	private function create_account($usertype_id,$user, $email, $pass){
 		
 		$err = '';		
 
 				try{
 
-					$sqlo = "INSERT INTO account (username, email, password) VALUES (:username, :email, :password);";
+					$sqlo = "INSERT INTO account (username, email, password, usertype_id) VALUES (:username, :email, :password, :usertype_id);";
 						
 					$stmti = $this->conn->prepare($sqlo);
 					$hashedPass = password_hash($pass, PASSWORD_DEFAULT);
@@ -79,7 +79,8 @@ error_reporting(E_ALL);
 					$stmti->execute(array(
 											":username" => $user,
 											":email" => $email,
-											":password" => $hashedPass
+											":password" => $hashedPass,
+											":usertype_id" => $usertype_id
 										));
 					$account_id = $this->conn->lastInsertId();
 					return $account_id;
@@ -111,6 +112,25 @@ error_reporting(E_ALL);
 
 	}
 
+		private function create_usertype(){
+		
+		$usertype_id = 7;
+		$type = "user";
+		$err = '';		
+try{
+		$sql = "INSERT INTO usertype (usertype_id, type) VALUES(:usertype_id, :type);";
+		$stmt = $this->conn->prepare($sql);
+		$stmt->execute(array(
+							":usertype_id" => $usertype_id,
+							":type" => $type
+		));
+		$usertype_id = $this->conn->lastInsertId();
+		return $usertype_id;
+	}catch(PDOException $e){
+		echo "<br>usertype error <br><b>" . $e->getMessage()."</b><br>";
+	}
+}
+
 		/*function to insert Users in Tabel account & table persoon*/
 	public function signUp($voornaam, $tussenvoegsel, $achternaam, $email, $user, $pass) {
 
@@ -122,7 +142,10 @@ error_reporting(E_ALL);
 		}else{
 				try{
 					$succes = "";
-					$account_id = $this->create_account($user, $email, $pass); 
+					$usertype_id = $this->create_usertype();
+					$account_id = $this->create_account($usertype_id, $user, $email, $pass); 
+
+					
 
 
 					$this->create_persoon($account_id, $voornaam, $tussenvoegsel, $achternaam);
