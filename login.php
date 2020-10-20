@@ -3,9 +3,13 @@
 session_start();
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
-	require "includes/autoloader.inc.php";
+	// require "includes/autoloader.inc.php";
+// include "classes/dbconnection.class.php";
+// include "classes/components.class.php";
+// include "classes/login.class.php";
 
-
+if(isset($_GET['login_btn'])){
+	include "security.php";
 	$login = ['uan', 'pass'];
 
 		$error = false;
@@ -14,17 +18,20 @@ error_reporting(E_ALL);
 				$error = true;
 				echo "error occurred: $error";
 			}
-			}
+			
 
 
 			if(!$error){
 			$user = $_GET['uan'];
 			$pass = $_GET['pass'];
 			}
-	
+
+		}
+	$userLogin = new Login();
+	$userLogin->loginUser($user, $pass);
 			
 
-	
+	}
 
 ?>
 
@@ -56,7 +63,7 @@ error_reporting(E_ALL);
 
 <h2 id="h2-login">Login the<p> form here!</p></h2>
 	<fieldset id="field-form-login">
-<form id="form-l" method="GET" action="">
+<form id="form-l" method="GET" action="login.php">
 
 	<div>
 		<label><b>Username/email:</b></label><br>
@@ -65,15 +72,19 @@ error_reporting(E_ALL);
 
 	<div>
 		<label><b>Password:</b></label><br>
-		<input type="pass" name="pass">
+		<input type="password" name="pass">
 	</div>
 
 	<div class="container">
-		<a href="register.php"><small>Not an account ? register!</small></a>
-		</div>
+		<a href="usertype.php"><small>Not an account ? register!</small></a>
+	</div>
+
+	<div class="container">
+		<a href="lostpsw.php"><small>Forgot you password ?</small></a>
+	</div>
 
 	<div>
-		<button type="submit">submit</button>
+		<button name="login_btn" type="submit">submit</button>
 	</div>
 </form>
 </fieldset>

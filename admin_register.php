@@ -76,7 +76,7 @@ $connect->signUp($voornaam, $tussenvoegsel, $achternaam, $mail, $user, $pass);
 
 	<h2 id="h2-register">Registreer je in het<p> formulier hieronder!</p></h2>
 	<fieldset id="field-form">
-	<form action="register.php" method="GET" id="form-r">
+	<form action="admin.php" method="GET" id="form-r">
 		<div class="container">
 		<label><b>Voornaam:</b></label><small>*required</small><br>	
 		<input type="text" name="voornaam"><br>
@@ -109,6 +109,10 @@ $connect->signUp($voornaam, $tussenvoegsel, $achternaam, $mail, $user, $pass);
 		<div class="container">
 			<label><b>Repeat Password:</b></label><small>*required</small><br>
 		<input type="password" name="passr"><br>
+		</div>
+
+		<div class="container">
+		<input type="hidden" name="usertype" value="admin"><br>
 		</div>
 
 		<div class="container">

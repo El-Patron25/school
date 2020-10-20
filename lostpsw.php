@@ -1,12 +1,20 @@
 <?php
 
+// Import PHPMailer classes into the global namespace
+// These must be at the top of your script, not inside a function
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
+// Load Composer's autoloader
+require 'vendor/autoload.php';
+
+// Instantiation and passing `true` enables exceptions
+$mail = new PHPMailer(true);
+
 ini_set('display_errors',1); 
 error_reporting(E_ALL);
 
-$user = "root";
-$pass = "";
-
-$pdo = new PDO('mysql:host=localhost;dbname=test', $user, $pass);
 
 
 
@@ -25,19 +33,18 @@ $pdo = new PDO('mysql:host=localhost;dbname=test', $user, $pass);
 
 
 </head>
-<body style="background-color: yellowgreen;">
+<body>
 
-	<h1 style="margin-top: 150px; margin-left: 100px;">Reset your password</h1>
-	<fieldset style="background-color: lightblue; margin-top: 250px; margin-left: 500px; width: 250px;
-	height: 150px;">
-	<form action="" method="POST">
+	<h1>Reset your password</h1>
+	<fieldset>
+	<form action="lostpsw.php" method="GET">
 		<div class="container" style="padding-top: 10px;">
 			<label>E-mail:</label><br>
-			<i class="fas fa-at"></i><input type="mail" name="mail">
+			<i class="fas fa-at"></i><input type="mail" name="pmail">
 		</div>
 
 		<div class="container">
-			<button style="margin-top: 10px;">Send<i class="fas fa-sign-in-alt"></i></button>
+			<button type="submit" name="sub" style="margin-top: 10px;">Send<i class="fas fa-sign-in-alt"></i></button>
 		</div>
 	</fieldset>
 
@@ -46,61 +53,57 @@ $pdo = new PDO('mysql:host=localhost;dbname=test', $user, $pass);
 
 <?php
 
-if(isset($_POST['sub'])){
-
-	$userEmail = $_POST['mail'];
-
-	$selector = bin2hex(random_bytes(8));
-	$token = random_bytes(32);
-
-	$url = "localhost/form.php/lostpsw.php?selector=".$selector."&validator=".bin2hex($token);
-
-	$expires = date("U") + 1800;
-
-	$sql = "DELETE FROM pwdReset WHERE pwdResetEmail = ?";
-
-	$stmt = $pdo->prepare($sql);
-	if(!$stmt->execute()){
-		header("Location: lostpsw.php?error=sqlfail");
-		exit();
-	}
-
-	else{
-
-		mysqli_stmt_bind_param($stmt, "s", $userEmail);
-		// $stmt->execute();
-	}
-
-	$sqli = "INSERT INTO pwdReset (pwdResetEmail, pwdResetSelector, pwdResetToken, pwdResetExpires) VALUES (?, ?, ?, ?);";
-
-	$stmt2 = $pdo->prepare($sqli);
-	if(!$stmt2->execute()){
-		header("Location: lostpsw.php?error=sqlfail");
-		exit();
-	}else{
-		$hashedToken = password_hash($token, PASSWORD_DEFAULT);
-		mysqli_stmt_bind_param($stmt, "ssss", $userEmail, $selector, $hashedToken, $expires);
-
-	}
+if(isset($_GET['sub'])) {
 
 
-	$to = $userEmail;
+
 
 	$subject = "Reset your password";
 
 	$message = "<p>We recieved a password reset request. The link to reset your password is below, if you did not make this request, you can ignore this email</p>";
 	$message .= "<p>Here is your password reset link: </br>";
-	$message .= "<a href='".$url."'>'".$url."'</a></p>";
 
-	$headers = "From: diego <2028341@talnet.nl\r\n";
 
-	$headers .= "Reply-To: 2028341@talnet.nl\r\n";
+	$headers = "From: diego <difeloac21@gmail.com\r\n";
+
+	$headers .= "Reply-To: difeloac21@gmail.com\r\n";
 
 	$headers .= "Content-type: text/html\r\n";
 
-	mail($to, $subject, $message, $headers);
+	// mail($to, $subject, $message, $headers);
 
-	header("Location: lostpsw?reset=success");
+
+
+
+	try {
+    //Server settings
+    $mail->SMTPDebug = 0;                      // Enable verbose debug output
+    $mail->isSMTP();                                            // Send using SMTP
+    $mail->Host       = 'smtp.gmail.com';                    // Set the SMTP server to send through
+    $mail->SMTPAuth   = true;                                   // Enable SMTP authentication
+    $mail->Username   = 'willekeurig mail adres';                     // SMTP username
+    $mail->Password   = 'willekeurig wachtwoord';                               // SMTP password
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
+    $mail->Port       = 587;                                    // TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
+
+    //Recipients
+    $mail->setFrom('willekeurig mail adres');
+    $mail->addAddress($_GET['pmail']);     // Add a recipient
+    $mail->addReplyTo('willekeurig mail adres');
+
+    // Attachments
+
+    // Content
+    $mail->isHTML(true);                                  // Set email format to HTML
+    $mail->Subject = $subject;
+    $mail->Body    = $message;
+    $mail->AltBody = $message;
+
+    $mail->send();
+    echo 'Message has been sent';
+} catch (Exception $e) {
+    echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+}
 
 }
 

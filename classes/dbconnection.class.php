@@ -2,6 +2,7 @@
 
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
+include "classes/components.class.php";
 
 	class dbconnection extends components {
 
@@ -114,15 +115,13 @@ error_reporting(E_ALL);
 
 		private function create_usertype(){
 		
-		$usertype_id = 7;
-		$type = "user";
+		$usertype = $_GET['usertype'];
 		$err = '';		
 try{
-		$sql = "INSERT INTO usertype (usertype_id, type) VALUES(:usertype_id, :type);";
+		$sql = "INSERT INTO usertype (type) VALUES(:type);";
 		$stmt = $this->conn->prepare($sql);
 		$stmt->execute(array(
-							":usertype_id" => $usertype_id,
-							":type" => $type
+							":type" => $usertype
 		));
 		$usertype_id = $this->conn->lastInsertId();
 		return $usertype_id;
@@ -156,58 +155,6 @@ try{
 					}
 			}
 		}
-
-
-		public function userCheck(){
-
-				try{
-
-					$sql = "SELECT password fROM account WHERE email = ? AND password = ?";
-
-					$stmt = $this->conn->prepare($sql);
-					$stmt->execute(array('email' => $_REQUEST[$user],
-										 'password' => $_REQUEST[$pass]));
-
-					$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-					$passhash = $result[0];
-					print_r($passhash);
-					$count = $stmt->rowCount();
-					if(password_verify($pass, $passhash)){
-							if($count > 0){
-								$email = $_SESSION['email'];
-								// $user = $_SESSION['username'];
-							}
-					}else{
-						$this->textValue("error", "an error occured line 132");
-					}
-
-
-				}catch(PDOException $e){
-					$this->textValue("error", "an error occured: ". $e->getMessage());
-				}
-		}
-
-public function login($user, $pass){
-
-		// $user = $this->userCheck();
-		$email = $this->userCheck();
-		$pattern = "/^[a-zA-Z0-9]*$/";
-
-		if(!$email){
-			$this->textValue("error", "an error occured");
-		}else{
-			if(empty($email) || empty($pass)){
-				$this->textValue("error", "an error ocurred: empty fields");
-			}elseif(!filter_var($email, FILTER_VALIDATE_EMAIL) && !preg_match($pattern, $user)){
-					$this->textValue("error", "an error ocurred: something went wrong!");
-			}elseif(!filter_var($email, FILTER_VALIDATE_EMAIL)){
-				$this->textValue("error", "an error ocurred: Email Check");
-			}elseif(!preg_match($pattern, $user)){
-				$this->textValue("error", "an error ocurred: wrong user");
-			}
-		}
-
-	}
 
 }
 

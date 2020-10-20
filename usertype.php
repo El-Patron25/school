@@ -3,7 +3,8 @@
 session_start();
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
-	require "includes/autoloader.inc.php";
+	// require "includes/autoloader.inc.php";
+	// require "security.php";
 
 
 	// if(isset($_GET['user'])){
@@ -22,7 +23,7 @@ error_reporting(E_ALL);
 <!DOCTYPE html>
 <html>
 <head>
-	<title>login</title>
+	<title>Registreer</title>
 
 	<link rel="stylesheet" type="text/css" href="style/main.css">
 </head>
@@ -44,21 +45,23 @@ error_reporting(E_ALL);
 		</div>
 	</div>
 
-<h2 id="h2-login">Login as<p> Admin or User!</p></h2>
+<h2 id="h2-login">Sign Up As<p> Admin or User!</p></h2>
 	<fieldset id="field-form-login">
-<form id="form-l" method="GET" action="register.php">
+<form id="form-l" method="GET" action="user_register.php">
 
 	<div>
 		<button type="submit">User</button>
 	</div>
 </form>
 
-<form id="form-l" method="GET" action="register.php">
+<form id="form-l" method="GET" action="admin_register.php">
 
 	<div>
 		<button type="submit">Admin</button>
 	</div>
-</form>
+</form><br>
+
+<small><a style="margin-left: 20px; font-size: 19px;" href="login.php">Already an account ?</a></small>
 
 
 </fieldset>

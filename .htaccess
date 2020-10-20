@@ -1,0 +1,7 @@
+#This is 404 Error Page to Show
+
+#RewriteEngine On
+
+
+#ErrorDocument 404 http://localhost/project1.php/404.php
+
